@@ -8,7 +8,11 @@ prefect-email is a collection of prebuilt Prefect tasks that can be used to quic
 
 ### Python setup
 
+<<<<<<< HEAD
 Requires an installation of Python 3.7+
+=======
+Requires an installation of Python 3.7+.
+>>>>>>> ec08217 (Initial commit)
 
 We recommend using a Python virtual environment manager such as pipenv, conda or virtualenv.
 
@@ -16,7 +20,11 @@ These tasks are designed to work with Prefect 2.0. For more information about ho
 
 ### Installation
 
+<<<<<<< HEAD
 Install `prefect-email` with `pip`
+=======
+Install `prefect-email` with `pip`:
+>>>>>>> ec08217 (Initial commit)
 
 ```bash
 pip install prefect-email
@@ -44,7 +52,11 @@ example_flow()
 
 If you encounter and bugs while using `prefect-email`, feel free to open an issue in the [prefect-email](https://github.com/PrefectHQ/prefect-email) repository.
 
+<<<<<<< HEAD
 If you have any questions or issues while using `prefect-email`, you can find help in either the [Prefect Discourse forum](https://discourse.prefect.io/) or the [Prefect Slack community](https://prefect.io/slack)
+=======
+If you have any questions or issues while using `prefect-email`, you can find help in either the [Prefect Discourse forum](https://discourse.prefect.io/) or the [Prefect Slack community](https://prefect.io/slack).
+>>>>>>> ec08217 (Initial commit)
 
 ## Development
 
