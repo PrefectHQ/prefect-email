@@ -25,8 +25,8 @@ async def email_send_message(
     email_to: Union[str, List[str]],
     email_credentials: "EmailCredentials",
     msg_plain: str = None,
-    email_to_cc: Union[str, List[str]] = None,  # TODO: allow list
-    email_to_bcc: Union[str, List[str]] = None,  # TODO: allow list
+    email_to_cc: Union[str, List[str]] = None,
+    email_to_bcc: Union[str, List[str]] = None,
     attachments: List[str] = None,
 ):
     """
