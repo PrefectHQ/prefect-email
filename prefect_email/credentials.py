@@ -16,7 +16,13 @@ class SMTPType(Enum):
 
 
 class SMTPServer(Enum):
+    AOL = "smtp.aol.com"
+    ATT = "smtp.mail.att.net"
+    COMCAST = "smtp.comcast.net"
+    ICLOUD = "smtp.mail.me.com"
     GMAIL = "smtp.gmail.com"
+    OUTLOOK = "smtp-mail.outlook.com"
+    YAHOO = "smtp.mail.yahoo.com"
 
 
 def _cast_to_enum(obj: Union[str, SMTPType], enum: Enum, valid_map: Dict[str, Enum] = None):
@@ -24,9 +30,12 @@ def _cast_to_enum(obj: Union[str, SMTPType], enum: Enum, valid_map: Dict[str, En
     Casts string to an enum member, if valid.
 
     Args:
-        obj: a member's name of the enum
-        enum: an Enum class
-        valid_map: valid mapping of the enum's values to its names
+        obj: a member's name of the enum.
+        enum: an Enum class.
+        valid_map: valid mapping of the enum's values to its names.
+
+    Returns:
+        A member of the enum.
     """
     valid_map = valid_map or {}
     if isinstance(obj, enum):
@@ -55,13 +64,23 @@ class EmailCredentials:
     [Google App Password](https://support.google.com/accounts/answer/185833) if you use Gmail.
 
     Args:
-        username: the username to use for authentication to the server
-        password: the password to use for authentication to the server
-        smtp_server: either the hostname of the SMTP server or the service name like "gmail"
-        smtp_type: either "SSL", "STARTTLS", or "INSECURE".
+        username: The username to use for authentication to the server.
+        password: The password to use for authentication to the server.
+        smtp_server: Either the hostname of the SMTP server or the service name like "gmail".
+        smtp_type: Either "SSL", "STARTTLS", or "INSECURE".
 
     Returns:
-        SMTP server
+        An authenticated SMTP server.
+    
+    Example:
+        @flow
+        def example_email_send_message_flow():
+            email_credentials = EmailCredentials(
+                username="username@email.com",
+                password="password",
+            )
+            server = email_credentials.get_server()
+            return server
     """
 
     username: str
@@ -77,8 +96,6 @@ class EmailCredentials:
         ).value
         smtp_type = _cast_to_enum(self.smtp_type, SMTPType)
         smtp_port = smtp_type.value
-
-        print(smtp_server, smtp_type, smtp_port)
 
         if smtp_type == SMTPType.INSECURE:
             server = SMTP(smtp_server, smtp_port)
