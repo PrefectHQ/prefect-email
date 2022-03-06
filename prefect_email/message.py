@@ -10,10 +10,11 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from functools import partial
-from typing import Any, List, Union, TYPE_CHECKING
+from typing import TYPE_CHECKING, List, Union
 
-from prefect import task
 from anyio import to_thread
+from prefect import task
+
 if TYPE_CHECKING:
     from prefect_email import EmailCredentials
 
@@ -42,10 +43,12 @@ async def email_send_message(
             If a list is provided, will join the items, separated by commas.
         msg_plain: The contents of the email as plain text,
             can be used in combination of msg.
-        email_to_cc: Additional email addresses to send the message to as cc, separated by commas.
-            If a list is provided, will join the items, separated by commas.
-        email_to_bcc: Additional email addresses to send the message to as bcc, separated by commas.
-            If a list is provided, will join the items, separated by commas.
+        email_to_cc: Additional email addresses to send the message to as cc,
+            separated by commas. If a list is provided, will join the items,
+            separated by commas.
+        email_to_bcc: Additional email addresses to send the message to as bcc,
+            separated by commas. If a list is provided, will join the items,
+            separated by commas.
         attachments: Names of files that should be sent as attachment.
 
     Returns:
@@ -76,11 +79,7 @@ async def email_send_message(
     message["Subject"] = subject
     message["From"] = email_credentials.username
 
-    email_to_dict = {
-        "To": email_to,
-        "Cc": email_to_cc,
-        "Bcc": email_to_bcc
-    }
+    email_to_dict = {"To": email_to, "Cc": email_to_cc, "Bcc": email_to_bcc}
     for key, val in email_to_dict.items():
         if isinstance(val, list):
             val = ", ".join(val)
@@ -93,7 +92,7 @@ async def email_send_message(
     if msg:
         message.attach(MIMEText(msg, "html"))
 
-    for filepath in (attachments or []):
+    for filepath in attachments or []:
         with open(filepath, "rb") as attachment:
             part = MIMEBase("application", "octet-stream")
             part.set_payload(attachment.read())

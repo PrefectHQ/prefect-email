@@ -1,21 +1,27 @@
 """Credential classes used to perform authenticated interactions with email services"""
 
-from typing import Union, Dict
-
-import functools
 import ssl
-from enum import Enum
 from dataclasses import dataclass
-from smtplib import SMTP_SSL, SMTP
+from enum import Enum
+from smtplib import SMTP, SMTP_SSL
+from typing import Dict, Union
 
 
 class SMTPType(Enum):
+    """
+    Protocols used to secure email transmissions.
+    """
+
     SSL = 465
     STARTTLS = 465
     INSECURE = 25
 
 
 class SMTPServer(Enum):
+    """
+    Server used to send email.
+    """
+
     AOL = "smtp.aol.com"
     ATT = "smtp.mail.att.net"
     COMCAST = "smtp.comcast.net"
@@ -25,7 +31,9 @@ class SMTPServer(Enum):
     YAHOO = "smtp.mail.yahoo.com"
 
 
-def _cast_to_enum(obj: Union[str, SMTPType], enum: Enum, valid_map: Dict[str, Enum] = None):
+def _cast_to_enum(
+    obj: Union[str, SMTPType], enum: Enum, valid_map: Dict[str, Enum] = None
+):
     """
     Casts string to an enum member, if valid.
 
@@ -50,9 +58,7 @@ def _cast_to_enum(obj: Union[str, SMTPType], enum: Enum, valid_map: Dict[str, En
     obj = obj.upper()
     if not hasattr(enum, obj):
         valid_enums = list(enum.__members__)
-        raise ValueError(
-            f"Must be either {valid_enums}; got {obj}"
-        )
+        raise ValueError(f"Must be either {valid_enums}; got {obj}")
     else:
         return getattr(enum, obj)
 
@@ -60,27 +66,17 @@ def _cast_to_enum(obj: Union[str, SMTPType], enum: Enum, valid_map: Dict[str, En
 @dataclass
 class EmailCredentials:
     """
-    Dataclass used to manage generic email authentication. It is recommended you use a
-    [Google App Password](https://support.google.com/accounts/answer/185833) if you use Gmail.
+    Dataclass used to manage generic email authentication.
+    It is recommended you use a
+    [Google App Password](https://support.google.com/accounts/answer/185833)
+    if you use Gmail.
 
     Args:
         username: The username to use for authentication to the server.
         password: The password to use for authentication to the server.
-        smtp_server: Either the hostname of the SMTP server or the service name like "gmail".
+        smtp_server: Either the hostname of the SMTP server or the service
+            name like "gmail".
         smtp_type: Either "SSL", "STARTTLS", or "INSECURE".
-
-    Returns:
-        An authenticated SMTP server.
-    
-    Example:
-        @flow
-        def example_email_send_message_flow():
-            email_credentials = EmailCredentials(
-                username="username@email.com",
-                password="password",
-            )
-            server = email_credentials.get_server()
-            return server
     """
 
     username: str
@@ -89,10 +85,26 @@ class EmailCredentials:
     smtp_type: Union[str, SMTPType] = SMTPType.SSL
 
     def get_server(self) -> SMTP:
+        """
+        Gets an authenticated SMTP server.
+
+        Returns:
+            An authenticated SMTP server.
+
+        Example:
+            Gets a GMail SMTP server.
+            ```python
+                @flow
+                def example_email_send_message_flow():
+                    email_credentials = EmailCredentials(
+                        username="username@email.com",
+                        password="password",
+                    )
+                    server = email_credentials.get_server()
+                    return server
+        """
         smtp_server = _cast_to_enum(
-            self.smtp_server,
-            SMTPServer,
-            valid_map=SMTPServer._value2member_map_
+            self.smtp_server, SMTPServer, valid_map=SMTPServer._value2member_map_
         ).value
         smtp_type = _cast_to_enum(self.smtp_type, SMTPType)
         smtp_port = smtp_type.value
