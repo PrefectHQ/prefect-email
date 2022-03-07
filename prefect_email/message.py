@@ -52,7 +52,7 @@ async def email_send_message(
         attachments: Names of files that should be sent as attachment.
 
     Returns:
-        The subject line of the email.
+        The MIME Multipart message of the email.
 
     Example:
         Sends a notification email to someone@gmail.com
@@ -109,4 +109,4 @@ async def email_send_message(
         partial_send_message = partial(server.send_message, message)
         await to_thread.run_sync(partial_send_message)
 
-    return subject
+    return message
