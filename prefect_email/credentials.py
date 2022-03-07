@@ -4,7 +4,7 @@ import ssl
 from dataclasses import dataclass
 from enum import Enum
 from smtplib import SMTP, SMTP_SSL
-from typing import Dict, Union
+from typing import Union
 
 
 class SMTPType(Enum):
@@ -31,36 +31,35 @@ class SMTPServer(Enum):
     YAHOO = "smtp.mail.yahoo.com"
 
 
-def _cast_to_enum(
-    obj: Union[str, SMTPType], enum: Enum, valid_map: Dict[str, Enum] = None
-):
+def _cast_to_enum(obj: Union[str, SMTPType], enum: Enum, restrict: bool = False):
     """
-    Casts string to an enum member, if valid.
+    Casts string to an enum member, if valid; else returns the input
+    obj, or raises a ValueError if restrict.
 
     Args:
-        obj: a member's name of the enum.
-        enum: an Enum class.
-        valid_map: valid mapping of the enum's values to its names.
+        obj: A member's name of the enum.
+        enum: An Enum class.
+        restrict: Whether to only allow passing members from the enum.
 
     Returns:
         A member of the enum.
     """
-    valid_map = valid_map or {}
     if isinstance(obj, enum):
         # if already an enum member, continue
         return obj
-    elif obj in valid_map:
-        # if the value (smtp.gmail.com) of an enum member (GMAIL)
-        # is used as input, map it back to use the enum member
-        return valid_map[obj]
 
+    valid_enums = list(enum.__members__)
     # capitalize and try to match an enum member
-    obj = obj.upper()
-    if not hasattr(enum, obj):
-        valid_enums = list(enum.__members__)
-        raise ValueError(f"Must be either {valid_enums}; got {obj}")
+    if obj.upper() not in valid_enums:
+        if restrict:
+            raise ValueError(f"Must be one of {valid_enums}; got {obj!r}")
+        else:
+            # primarily used for SMTPServer so that users
+            # can pass in their custom servers not listed
+            # as one of the SMTPServer Enum values.
+            return obj
     else:
-        return getattr(enum, obj)
+        return getattr(enum, obj.upper())
 
 
 @dataclass
@@ -74,8 +73,8 @@ class EmailCredentials:
     Args:
         username: The username to use for authentication to the server.
         password: The password to use for authentication to the server.
-        smtp_server: Either the hostname of the SMTP server or the service
-            name like "gmail".
+        smtp_server: Either the hostname of the SMTP server, or one of the
+            keys from the built-in SMTPServer Enum members, like "gmail".
         smtp_type: Either "SSL", "STARTTLS", or "INSECURE".
     """
 
@@ -83,6 +82,7 @@ class EmailCredentials:
     password: str
     smtp_server: Union[str, SMTPServer] = SMTPServer.GMAIL
     smtp_type: Union[str, SMTPType] = SMTPType.SSL
+    smtp_port: int = None
 
     def get_server(self) -> SMTP:
         """
@@ -95,7 +95,7 @@ class EmailCredentials:
             Gets a GMail SMTP server.
             ```python
                 @flow
-                def example_email_send_message_flow():
+                def example_get_server_flow():
                     email_credentials = EmailCredentials(
                         username="username@email.com",
                         password="password",
@@ -103,10 +103,11 @@ class EmailCredentials:
                     server = email_credentials.get_server()
                     return server
         """
-        smtp_server = _cast_to_enum(
-            self.smtp_server, SMTPServer, valid_map=SMTPServer._value2member_map_
-        ).value
-        smtp_type = _cast_to_enum(self.smtp_type, SMTPType)
+        smtp_server = _cast_to_enum(self.smtp_server, SMTPServer)
+        if isinstance(smtp_server, SMTPServer):
+            smtp_server = smtp_server.value
+
+        smtp_type = _cast_to_enum(self.smtp_type, SMTPType, restrict=True)
         smtp_port = smtp_type.value
 
         if smtp_type == SMTPType.INSECURE:

@@ -1,8 +1,8 @@
 """
 Tasks for interacting with email message services
-Do NOT rename to `email.py` as it will conflict with
-the standard library!
 """
+# Do NOT rename this module to `email.py` as it
+# will conflict with the standard library!
 
 import os
 from email import encoders
@@ -26,6 +26,7 @@ async def email_send_message(
     email_to: Union[str, List[str]],
     email_credentials: "EmailCredentials",
     msg_plain: str = None,
+    email_from: str = None,
     email_to_cc: Union[str, List[str]] = None,
     email_to_bcc: Union[str, List[str]] = None,
     attachments: List[str] = None,
@@ -38,11 +39,11 @@ async def email_send_message(
     Args:
         subject: The subject line of the email.
         msg: The contents of the email, added as html; can be used in
-            combination of msg_plain.
+            combination with msg_plain.
         email_to: The email addresses to send the message to, separated by commas.
             If a list is provided, will join the items, separated by commas.
         msg_plain: The contents of the email as plain text,
-            can be used in combination of msg.
+            can be used in combination with msg.
         email_to_cc: Additional email addresses to send the message to as cc,
             separated by commas. If a list is provided, will join the items,
             separated by commas.
@@ -77,7 +78,7 @@ async def email_send_message(
     """
     message = MIMEMultipart()
     message["Subject"] = subject
-    message["From"] = email_credentials.username
+    message["From"] = email_from or email_credentials.username
 
     email_to_dict = {"To": email_to, "Cc": email_to_cc, "Bcc": email_to_bcc}
     for key, val in email_to_dict.items():
