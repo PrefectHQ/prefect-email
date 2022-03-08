@@ -2,7 +2,7 @@
 
 ## Welcome!
 
-prefect-email is a collection of prebuilt Prefect tasks that can be used to quickly construct Prefect flows.
+`prefect-email` is a collection of prebuilt Prefect tasks that can be used to quickly construct Prefect flows that interacts with email services..
 
 ## Getting Started
 
@@ -26,18 +26,23 @@ pip install prefect-email
 
 ```python
 from prefect import flow
-from prefect_email.tasks import (
-    goodbye_prefect_email,
-    hello_prefect_email,
-)
-
+from prefect_email import EmailCredentials, email_send_message
 
 @flow
-def example_flow():
-    hello_prefect_email
-    goodbye_prefect_email
+def example_email_send_message_flow():
+    email_credentials = EmailCredentials(
+        username="username@email.com",
+        password="password",
+    )
+    subject = email_send_message(
+        email_credentials=email_credentials,
+        subject="Example Flow Notification",
+        msg="This proves email_send_message works!",
+        email_to="someone@email.com",
+    )
+    return subject
 
-example_flow()
+example_email_send_message_flow()
 ```
 
 ## Resources

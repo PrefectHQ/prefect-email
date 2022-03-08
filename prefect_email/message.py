@@ -53,10 +53,10 @@ async def email_send_message(
         attachments: Names of files that should be sent as attachment.
 
     Returns:
-        The MIME Multipart message of the email.
+        MimeText: The MIME Multipart message of the email.
 
     Example:
-        Sends a notification email to someone@gmail.com
+        Sends a notification email to someone@gmail.com.
         ```python
         from prefect import flow
         from prefect_email import EmailCredentials, email_send_message
@@ -74,6 +74,8 @@ async def email_send_message(
                 email_to="someone@email.com",
             )
             return subject
+
+        example_email_send_message_flow()
         ```
     """
     message = MIMEMultipart()

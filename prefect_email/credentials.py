@@ -89,19 +89,25 @@ class EmailCredentials:
         Gets an authenticated SMTP server.
 
         Returns:
-            An authenticated SMTP server.
+            SMTP: An authenticated SMTP server.
 
         Example:
-            Gets a GMail SMTP server.
+            Gets a GMail SMTP server through defaults.
             ```python
-                @flow
-                def example_get_server_flow():
-                    email_credentials = EmailCredentials(
-                        username="username@email.com",
-                        password="password",
-                    )
-                    server = email_credentials.get_server()
-                    return server
+            from prefect import flow
+            from prefect_email import EmailCredentials
+
+            @flow
+            def example_get_server_flow():
+                email_credentials = EmailCredentials(
+                    username="username@gmail.com",
+                    password="password",
+                )
+                server = email_credentials.get_server()
+                return server
+
+            example_get_server_flow()
+            ```
         """
         smtp_server = _cast_to_enum(self.smtp_server, SMTPServer)
         if isinstance(smtp_server, SMTPServer):
