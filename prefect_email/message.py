@@ -25,11 +25,11 @@ async def email_send_message(
     msg: str,
     email_to: Union[str, List[str]],
     email_credentials: "EmailCredentials",
-    msg_plain: str = None,
-    email_from: str = None,
-    email_to_cc: Union[str, List[str]] = None,
-    email_to_bcc: Union[str, List[str]] = None,
-    attachments: List[str] = None,
+    msg_plain: Optional[str] = None,
+    email_from: Optional[str] = None,
+    email_to_cc: Optional[Union[str, List[str]]] = None,
+    email_to_bcc: Optional[Union[str, List[str]]] = None,
+    attachments: Optional[List[str]] = None,
 ):
     """
     Sends an email message from an authenticated email service over SMTP.
