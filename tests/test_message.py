@@ -10,16 +10,19 @@ EMAIL_TO = [
     "someone@email.com",
     "someone@email.com, someone_else@email.com",
     ["some_1@email.com", "some_2@email.com"],
+    None,
 ]
 EMAIL_TO_CC = [
     "cc_someone@email.com",
     "cc_someone@email.com, cc_someone_else@email.com",
     ["cc_some_1@email.com", "cc_some_2@email.com"],
+    None,
 ]
 EMAIL_TO_BCC = [
     "bcc_someone@email.com",
     "bcc_someone@email.com, bcc_someone_else@email.com",
     ["bcc_some_1@email.com", "bcc_some_2@email.com"],
+    None,
 ]
 
 
@@ -52,6 +55,13 @@ async def test_email_send_message(
         )
         return message
 
+    email_to_dict = {"To": email_to, "Cc": email_to_cc, "Bcc": email_to_bcc}
+
+    if all(val is None for val in email_to_dict.values()):
+        with pytest.raises(ValueError):
+            (await test_flow()).result(raise_on_failure=True)
+        return
+
     message = (await test_flow()).result().result()
     assert message["Subject"] == subject
     assert message["From"] == email_credentials.username
@@ -60,7 +70,6 @@ async def test_email_send_message(
     attachment = message.get_payload()[2].get_payload()
     assert base64.b64decode(attachment) == attachment_text
 
-    email_to_dict = {"To": email_to, "Cc": email_to_cc, "Bcc": email_to_bcc}
     for key, val in email_to_dict.items():
         if isinstance(val, list):
             val = ", ".join(val)
