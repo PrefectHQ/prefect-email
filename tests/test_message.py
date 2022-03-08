@@ -1,0 +1,67 @@
+import base64
+import pathlib
+
+import pytest
+from prefect import flow
+
+from prefect_email.message import email_send_message
+
+EMAIL_TO = [
+    "someone@email.com",
+    "someone@email.com, someone_else@email.com",
+    ["some_1@email.com", "some_2@email.com"],
+]
+EMAIL_TO_CC = [
+    "cc_someone@email.com",
+    "cc_someone@email.com, cc_someone_else@email.com",
+    ["cc_some_1@email.com", "cc_some_2@email.com"],
+]
+EMAIL_TO_BCC = [
+    "bcc_someone@email.com",
+    "bcc_someone@email.com, bcc_someone_else@email.com",
+    ["bcc_some_1@email.com", "bcc_some_2@email.com"],
+]
+
+
+@pytest.mark.parametrize("email_to", EMAIL_TO)
+@pytest.mark.parametrize("email_to_cc", EMAIL_TO_CC)
+@pytest.mark.parametrize("email_to_bcc", EMAIL_TO_BCC)
+async def test_email_send_message(
+    email_to, email_to_cc, email_to_bcc, email_credentials
+):
+
+    subject = "Example Flow Notification"
+    msg_plain = "This proves msg plain is attached first!"
+    msg = "<h1>This proves msg is attached second!</h1>"
+
+    attachment = pathlib.Path(__file__).parent.absolute() / "attachment.txt"
+    with open(attachment, "rb") as f:
+        attachment_text = f.read()
+
+    @flow
+    async def test_flow():
+        message = await email_send_message(
+            email_credentials=email_credentials,
+            subject=subject,
+            msg=msg,
+            msg_plain=msg_plain,
+            attachments=[attachment],
+            email_to=email_to,
+            email_to_cc=email_to_cc,
+            email_to_bcc=email_to_bcc,
+        )
+        return message
+
+    message = (await test_flow()).result().result()
+    assert message["Subject"] == subject
+    assert message["From"] == email_credentials.username
+    assert message.get_payload()[0].get_payload() == msg_plain
+    assert message.get_payload()[1].get_payload() == msg
+    attachment = message.get_payload()[2].get_payload()
+    assert base64.b64decode(attachment) == attachment_text
+
+    email_to_dict = {"To": email_to, "Cc": email_to_cc, "Bcc": email_to_bcc}
+    for key, val in email_to_dict.items():
+        if isinstance(val, list):
+            val = ", ".join(val)
+        assert message[key] == val
