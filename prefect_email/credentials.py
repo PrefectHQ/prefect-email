@@ -4,7 +4,7 @@ import ssl
 from dataclasses import dataclass
 from enum import Enum
 from smtplib import SMTP, SMTP_SSL
-from typing import Union
+from typing import Optional, Union
 
 
 class SMTPType(Enum):
@@ -76,6 +76,7 @@ class EmailCredentials:
         smtp_server: Either the hostname of the SMTP server, or one of the
             keys from the built-in SMTPServer Enum members, like "gmail".
         smtp_type: Either "SSL", "STARTTLS", or "INSECURE".
+        smtp_port: If provided, overrides the smtp_type's default port number.
     """
 
     username: str
@@ -114,7 +115,9 @@ class EmailCredentials:
             smtp_server = smtp_server.value
 
         smtp_type = _cast_to_enum(self.smtp_type, SMTPType, restrict=True)
-        smtp_port = smtp_type.value
+        smtp_port = self.smtp_port
+        if smtp_port is None:
+            smtp_port = smtp_type.value
 
         if smtp_type == SMTPType.INSECURE:
             server = SMTP(smtp_server, smtp_port)
