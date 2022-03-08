@@ -80,9 +80,9 @@ class EmailCredentials:
 
     username: str
     password: str
-    smtp_server: Union[str, SMTPServer] = SMTPServer.GMAIL
-    smtp_type: Union[str, SMTPType] = SMTPType.SSL
-    smtp_port: int = None
+    smtp_server: Optional[Union[str, SMTPServer]] = SMTPServer.GMAIL
+    smtp_type: Optional[Union[str, SMTPType]] = SMTPType.SSL
+    smtp_port: Optional[int] = None
 
     def get_server(self) -> SMTP:
         """
