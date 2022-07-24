@@ -1,10 +1,12 @@
 """Credential classes used to perform authenticated interactions with email services"""
 
 import ssl
-from dataclasses import dataclass
 from enum import Enum
 from smtplib import SMTP, SMTP_SSL
 from typing import Optional, Union
+
+from prefect.blocks.core import Block
+from pydantic import SecretStr
 
 
 class SMTPType(Enum):
@@ -62,10 +64,9 @@ def _cast_to_enum(obj: Union[str, SMTPType], enum: Enum, restrict: bool = False)
         return getattr(enum, obj.upper())
 
 
-@dataclass
-class EmailCredentials:
+class EmailCredentials(Block):
     """
-    Dataclass used to manage generic email authentication.
+    Block used to manage generic email authentication.
     It is recommended you use a
     [Google App Password](https://support.google.com/accounts/answer/185833)
     if you use Gmail.
@@ -79,8 +80,11 @@ class EmailCredentials:
         smtp_port: If provided, overrides the smtp_type's default port number.
     """
 
+    _block_type_name = "Email Credentials"
+    _logo_url = "https://github.com/PrefectHQ/orion/blob/main/docs/img/collections/email.png?raw=true"  # noqa
+
     username: str
-    password: str
+    password: SecretStr
     smtp_server: Optional[Union[str, SMTPServer]] = SMTPServer.GMAIL
     smtp_type: Optional[Union[str, SMTPType]] = SMTPType.SSL
     smtp_port: Optional[int] = None
