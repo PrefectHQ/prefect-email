@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updated tests to be compatible with core Prefect library (v2.0b9) and bumped required version - [#18](https://github.com/PrefectHQ/prefect_email/pull/18)
+- Updated tests to be compatible with core Prefect library (v2.0b9) and bumped required version - [#20](https://github.com/PrefectHQ/prefect_email/pull/20)
 
 ### Deprecated
 
