@@ -78,7 +78,14 @@ class EmailServerCredentials(Block):
             keys from the built-in SMTPServer Enum members, like "gmail".
         smtp_type: Either "SSL", "STARTTLS", or "INSECURE".
         smtp_port: If provided, overrides the smtp_type's default port number.
-    """
+
+    Example:
+        Load stored email server credentials:
+        ```python
+        from prefect_email import EmailServerCredentials
+        email_credentials_block = EmailServerCredentials.load("MY_BLOCK_NAME")
+        ```
+    """  # noqa E501
 
     _block_type_name = "Email Server Credentials"
     _logo_url = "https://images.ctfassets.net/gm98wzqotmnx/3PcxFuO9XUqs7wU9MiUBMg/ca740e27815d15528373aced667f58b9/email__1_.png?h=250"  # noqa
