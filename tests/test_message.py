@@ -59,10 +59,10 @@ async def test_email_send_message(
 
     if all(val is None for val in email_to_dict.values()):
         with pytest.raises(ValueError):
-            (await test_flow()).result(raise_on_failure=True)
+            await test_flow()
         return
 
-    message = (await test_flow()).result().result()
+    message = await test_flow()
     assert message["Subject"] == subject
     assert message["From"] == email_credentials.username
     assert message.get_payload()[0].get_payload() == msg_plain
