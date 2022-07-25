@@ -34,14 +34,19 @@ def test_cast_to_enum_restrict_error():
 @pytest.mark.parametrize("smtp_type", ["SSL", "STARTTLS", "ssl", "StartTLS"])
 def test_email_credentials_get_server(smtp_server, smtp_type, smtp):
     server = EmailCredentials(
-        "username", "password", smtp_server=smtp_server, smtp_type=smtp_type
+        username="username",
+        password="password",
+        smtp_server=smtp_server,
+        smtp_type=smtp_type,
     ).get_server()
     assert server.username == "username"
-    assert server.password == "password"
+    assert server.password.get_secret_value() == "password"
     assert server.server.lower() == "smtp.gmail.com"
     assert server.port == 465
 
 
 def test_email_credentials_get_server_error(smtp):
     with pytest.raises(ValueError):
-        EmailCredentials("username", "password", smtp_type="INVALID").get_server()
+        EmailCredentials(
+            username="username", password="password", smtp_type="INVALID"
+        ).get_server()
