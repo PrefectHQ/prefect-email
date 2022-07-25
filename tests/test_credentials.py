@@ -1,7 +1,7 @@
 import pytest
 
 from prefect_email.credentials import (
-    EmailCredentials,
+    EmailServerCredentials,
     SMTPServer,
     SMTPType,
     _cast_to_enum,
@@ -32,21 +32,21 @@ def test_cast_to_enum_restrict_error():
     "smtp_server", ["gmail", "GMAIL", "smtp.gmail.com", "SMTP.GMAIL.COM"]
 )
 @pytest.mark.parametrize("smtp_type", ["SSL", "STARTTLS", "ssl", "StartTLS"])
-def test_email_credentials_get_server(smtp_server, smtp_type, smtp):
-    server = EmailCredentials(
+def test_email_server_credentials_get_server(smtp_server, smtp_type, smtp):
+    server = EmailServerCredentials(
         username="username",
         password="password",
         smtp_server=smtp_server,
         smtp_type=smtp_type,
     ).get_server()
     assert server.username == "username"
-    assert server.password.get_secret_value() == "password"
+    assert server.password == "password"
     assert server.server.lower() == "smtp.gmail.com"
     assert server.port == 465
 
 
-def test_email_credentials_get_server_error(smtp):
+def test_email_server_credentials_get_server_error(smtp):
     with pytest.raises(ValueError):
-        EmailCredentials(
+        EmailServerCredentials(
             username="username", password="password", smtp_type="INVALID"
         ).get_server()

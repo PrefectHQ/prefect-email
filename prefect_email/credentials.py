@@ -64,9 +64,9 @@ def _cast_to_enum(obj: Union[str, SMTPType], enum: Enum, restrict: bool = False)
         return getattr(enum, obj.upper())
 
 
-class EmailCredentials(Block):
+class EmailServerCredentials(Block):
     """
-    Block used to manage generic email authentication.
+    Block used to manage generic email server authentication.
     It is recommended you use a
     [Google App Password](https://support.google.com/accounts/answer/185833)
     if you use Gmail.
@@ -80,8 +80,8 @@ class EmailCredentials(Block):
         smtp_port: If provided, overrides the smtp_type's default port number.
     """
 
-    _block_type_name = "Email Credentials"
-    _logo_url = "https://github.com/PrefectHQ/orion/blob/main/docs/img/collections/email.png?raw=true"  # noqa
+    _block_type_name = "Email Server Credentials"
+    _logo_url = "https://images.ctfassets.net/gm98wzqotmnx/3PcxFuO9XUqs7wU9MiUBMg/ca740e27815d15528373aced667f58b9/email__1_.png?h=250"  # noqa
 
     username: str
     password: SecretStr
@@ -100,15 +100,15 @@ class EmailCredentials(Block):
             Gets a GMail SMTP server through defaults.
             ```python
             from prefect import flow
-            from prefect_email import EmailCredentials
+            from prefect_email import EmailServerCredentials
 
             @flow
             def example_get_server_flow():
-                email_credentials = EmailCredentials(
+                email_server_credentials = EmailServerCredentials(
                     username="username@gmail.com",
                     password="password",
                 )
-                server = email_credentials.get_server()
+                server = email_server_credentials.get_server()
                 return server
 
             example_get_server_flow()
@@ -132,6 +132,6 @@ class EmailCredentials(Block):
             elif smtp_type == SMTPType.STARTTLS:
                 server = SMTP(smtp_server, smtp_port)
                 server.starttls(context=context)
-            server.login(self.username, self.password)
+            server.login(self.username, self.password.get_secret_value())
 
         return server

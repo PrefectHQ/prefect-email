@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Updated tests to be compatible with core Prefect library (v2.0b9) and bumped required version - [#20](https://github.com/PrefectHQ/prefect_email/pull/20)
-- Converted `EmailCredentials` into a `Block` - [#21](https://github.com/PrefectHQ/prefect-sqlalchemy/pull/21)
+- Converted `EmailServerCredentials` into a `Block` - [#21](https://github.com/PrefectHQ/prefect-sqlalchemy/pull/21)
 
 ### Deprecated
 
