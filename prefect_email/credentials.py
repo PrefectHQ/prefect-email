@@ -83,7 +83,7 @@ class EmailServerCredentials(Block):
         Load stored email server credentials:
         ```python
         from prefect_email import EmailServerCredentials
-        email_credentials_block = EmailServerCredentials.load("MY_BLOCK_NAME")
+        email_credentials_block = EmailServerCredentials.load("BLOCK_NAME")
         ```
     """  # noqa E501
 
