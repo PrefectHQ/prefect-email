@@ -96,7 +96,7 @@ class EmailServerCredentials(Block):
             )
             return subject
 
-        email_send_message_flow()        
+        email_send_message_flow()
         ```
     """  # noqa E501
 
