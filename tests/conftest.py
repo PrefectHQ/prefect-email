@@ -15,10 +15,10 @@ class EmailServerMethodsMock:
 
 
 @pytest.fixture
-def email_credentials():
-    email_credentials = MagicMock(username="someone@email.com")
-    email_credentials.get_server.side_effect = lambda: EmailServerMethodsMock()
-    return email_credentials
+def email_server_credentials():
+    email_server_credentials = MagicMock(username="someone@email.com")
+    email_server_credentials.get_server.side_effect = lambda: EmailServerMethodsMock()
+    return email_server_credentials
 
 
 class SMTPMock:

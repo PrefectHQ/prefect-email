@@ -1,10 +1,12 @@
 """Credential classes used to perform authenticated interactions with email services"""
 
 import ssl
-from dataclasses import dataclass
 from enum import Enum
 from smtplib import SMTP, SMTP_SSL
 from typing import Optional, Union
+
+from prefect.blocks.core import Block
+from pydantic import SecretStr
 
 
 class SMTPType(Enum):
@@ -62,10 +64,9 @@ def _cast_to_enum(obj: Union[str, SMTPType], enum: Enum, restrict: bool = False)
         return getattr(enum, obj.upper())
 
 
-@dataclass
-class EmailCredentials:
+class EmailServerCredentials(Block):
     """
-    Dataclass used to manage generic email authentication.
+    Block used to manage generic email server authentication.
     It is recommended you use a
     [Google App Password](https://support.google.com/accounts/answer/185833)
     if you use Gmail.
@@ -77,10 +78,20 @@ class EmailCredentials:
             keys from the built-in SMTPServer Enum members, like "gmail".
         smtp_type: Either "SSL", "STARTTLS", or "INSECURE".
         smtp_port: If provided, overrides the smtp_type's default port number.
-    """
+
+    Example:
+        Load stored email server credentials:
+        ```python
+        from prefect_email import EmailServerCredentials
+        email_credentials_block = EmailServerCredentials.load("MY_BLOCK_NAME")
+        ```
+    """  # noqa E501
+
+    _block_type_name = "Email Server Credentials"
+    _logo_url = "https://images.ctfassets.net/gm98wzqotmnx/3PcxFuO9XUqs7wU9MiUBMg/ca740e27815d15528373aced667f58b9/email__1_.png?h=250"  # noqa
 
     username: str
-    password: str
+    password: SecretStr
     smtp_server: Optional[Union[str, SMTPServer]] = SMTPServer.GMAIL
     smtp_type: Optional[Union[str, SMTPType]] = SMTPType.SSL
     smtp_port: Optional[int] = None
@@ -96,15 +107,15 @@ class EmailCredentials:
             Gets a GMail SMTP server through defaults.
             ```python
             from prefect import flow
-            from prefect_email import EmailCredentials
+            from prefect_email import EmailServerCredentials
 
             @flow
             def example_get_server_flow():
-                email_credentials = EmailCredentials(
+                email_server_credentials = EmailServerCredentials(
                     username="username@gmail.com",
                     password="password",
                 )
-                server = email_credentials.get_server()
+                server = email_server_credentials.get_server()
                 return server
 
             example_get_server_flow()
@@ -128,6 +139,6 @@ class EmailCredentials:
             elif smtp_type == SMTPType.STARTTLS:
                 server = SMTP(smtp_server, smtp_port)
                 server.starttls(context=context)
-            server.login(self.username, self.password)
+            server.login(self.username, self.password.get_secret_value())
 
         return server

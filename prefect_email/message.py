@@ -16,14 +16,14 @@ from anyio import to_thread
 from prefect import task
 
 if TYPE_CHECKING:
-    from prefect_email import EmailCredentials
+    from prefect_email import EmailServerCredentials
 
 
 @task
 async def email_send_message(
     subject: str,
     msg: str,
-    email_credentials: "EmailCredentials",
+    email_server_credentials: "EmailServerCredentials",
     msg_plain: Optional[str] = None,
     email_from: Optional[str] = None,
     email_to: Optional[Union[str, List[str]]] = None,
@@ -59,16 +59,16 @@ async def email_send_message(
         Sends a notification email to someone@gmail.com.
         ```python
         from prefect import flow
-        from prefect_email import EmailCredentials, email_send_message
+        from prefect_email import EmailServerCredentials, email_send_message
 
         @flow
         def example_email_send_message_flow():
-            email_credentials = EmailCredentials(
+            email_server_credentials = EmailServerCredentials(
                 username="username@email.com",
                 password="password",
             )
             subject = email_send_message(
-                email_credentials=email_credentials,
+                email_server_credentials=email_server_credentials,
                 subject="Example Flow Notification",
                 msg="This proves email_send_message works!",
                 email_to="someone@email.com",
@@ -80,7 +80,7 @@ async def email_send_message(
     """
     message = MIMEMultipart()
     message["Subject"] = subject
-    message["From"] = email_from or email_credentials.username
+    message["From"] = email_from or email_server_credentials.username
 
     email_to_dict = {"To": email_to, "Cc": email_to_cc, "Bcc": email_to_bcc}
     if all(val is None for val in email_to_dict.values()):
@@ -113,7 +113,7 @@ async def email_send_message(
         )
         message.attach(part)
 
-    with email_credentials.get_server() as server:
+    with email_server_credentials.get_server() as server:
         partial_send_message = partial(server.send_message, message)
         await to_thread.run_sync(partial_send_message)
 

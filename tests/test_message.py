@@ -30,7 +30,7 @@ EMAIL_TO_BCC = [
 @pytest.mark.parametrize("email_to_cc", EMAIL_TO_CC)
 @pytest.mark.parametrize("email_to_bcc", EMAIL_TO_BCC)
 async def test_email_send_message(
-    email_to, email_to_cc, email_to_bcc, email_credentials
+    email_to, email_to_cc, email_to_bcc, email_server_credentials
 ):
 
     subject = "Example Flow Notification"
@@ -44,7 +44,7 @@ async def test_email_send_message(
     @flow
     async def test_flow():
         message = await email_send_message(
-            email_credentials=email_credentials,
+            email_server_credentials=email_server_credentials,
             subject=subject,
             msg=msg,
             msg_plain=msg_plain,
@@ -64,7 +64,7 @@ async def test_email_send_message(
 
     message = await test_flow()
     assert message["Subject"] == subject
-    assert message["From"] == email_credentials.username
+    assert message["From"] == email_server_credentials.username
     assert message.get_payload()[0].get_payload() == msg_plain
     assert message.get_payload()[1].get_payload() == msg
     attachment = message.get_payload()[2].get_payload()
