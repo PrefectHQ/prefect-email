@@ -82,8 +82,21 @@ class EmailServerCredentials(Block):
     Example:
         Load stored email server credentials:
         ```python
-        from prefect_email import EmailServerCredentials
-        email_credentials_block = EmailServerCredentials.load("BLOCK_NAME")
+        from prefect import flow
+        from prefect_email import EmailServerCredentials, email_send_message
+
+        @flow
+        def example_email_send_message_flow():
+            email_credentials_block = EmailServerCredentials.load("BLOCK_NAME")
+            subject = email_send_message(
+                email_server_credentials=email_credentials_block,
+                subject="Example Flow Notification",
+                msg="This proves email_send_message works!",
+                email_to="someone@email.com",
+            )
+            return subject
+
+        example_email_send_message_flow()        
         ```
     """  # noqa E501
 
