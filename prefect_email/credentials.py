@@ -80,6 +80,13 @@ class EmailServerCredentials(Block):
         smtp_port: If provided, overrides the smtp_type's default port number.
 
     Example:
+        Load stored email server credentials:
+        ```python
+        from prefect_email import EmailServerCredentials
+
+        email_credentials_block = EmailServerCredentials.load("BLOCK_NAME")
+        ```
+
         Load stored email server credentials and email someone@email.com:
         ```python
         from prefect import flow
