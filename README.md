@@ -22,7 +22,7 @@ Install `prefect-email` with `pip`:
 pip install prefect-email
 ```
 
-### Write and run a flow
+### Send an email using Gmail
 
 ```python
 from prefect import flow
@@ -31,19 +31,21 @@ from prefect_email import EmailServerCredentials, email_send_message
 @flow
 def example_email_send_message_flow():
     email_server_credentials = EmailServerCredentials(
-        username="username@email.com",
-        password="password",
+        username="your_email_address@gmail.com",
+        password="MUST_be_an_app_password_here!",
     )
     subject = email_send_message(
         email_server_credentials=email_server_credentials,
-        subject="Example Flow Notification",
+        subject="Example Flow Notification using Gmail",
         msg="This proves email_send_message works!",
-        email_to="someone@email.com",
+        email_to="someone_awesome@gmail.com",
     )
     return subject
 
 example_email_send_message_flow()
 ```
+
+Please note, many email services, like Gmail, require an [App Password](https://support.google.com/accounts/answer/185833) to successfully send emails. If you encounter an error similar to `smtplib.SMTPAuthenticationError: (535, b'5.7.8 Username and Password not accepted...`, it's likely you are not using an App Password.
 
 ## Resources
 
