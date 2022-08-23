@@ -71,7 +71,7 @@ class EmailServerCredentials(Block):
     [Google App Password](https://support.google.com/accounts/answer/185833)
     if you use Gmail.
 
-    Args:
+    Attributes:
         username: The username to use for authentication to the server.
         password: The password to use for authentication to the server.
         smtp_server: Either the hostname of the SMTP server, or one of the
