@@ -29,7 +29,7 @@ setup(
     extras_require={"dev": dev_requires},
     entry_points={
         "prefect.collections": [
-            "EmailServerCredentials = prefect_email.credentials",
+            "prefect_email = prefect_email",
         ]
     },
     classifiers=[
