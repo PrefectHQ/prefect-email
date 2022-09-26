@@ -1,8 +1,23 @@
 # prefect-email
 
+<p align="center">
+    <a href="https://pypi.python.org/pypi/prefect-email/" alt="PyPI version">
+        <img alt="PyPI" src="https://img.shields.io/pypi/v/prefect-email?color=0052FF&labelColor=090422"></a>
+    <a href="https://github.com/PrefectHQ/prefect-email/" alt="Stars">
+        <img src="https://img.shields.io/github/stars/PrefectHQ/prefect-email?color=0052FF&labelColor=090422" /></a>
+    <a href="https://pepy.tech/badge/prefect-email/" alt="Downloads">
+        <img src="https://img.shields.io/pypi/dm/prefect-email?color=0052FF&labelColor=090422" /></a>
+    <a href="https://github.com/PrefectHQ/prefect-email/pulse" alt="Activity">
+        <img src="https://img.shields.io/github/commit-activity/m/PrefectHQ/prefect-email?color=0052FF&labelColor=090422" /></a>
+    <br>
+    <a href="https://prefect-email-community.slack.com" alt="Slack">
+        <img src="https://img.shields.io/badge/slack-join_community-red.svg?color=0052FF&labelColor=090422&logo=slack" /></a>
+    <a href="https://discourse.prefect-email.io/" alt="Discourse">
+        <img src="https://img.shields.io/badge/discourse-browse_forum-red.svg?color=0052FF&labelColor=090422&logo=discourse" /></a>
+</p>
 ## Welcome!
 
-`prefect-email` is a collection of prebuilt Prefect tasks that can be used to quickly construct Prefect flows that interacts with email services..
+`prefect-email` is a collection of prebuilt Prefect tasks that can be used to quickly construct Prefect flows that interacts with email services.
 
 ## Getting Started
 
@@ -21,6 +36,14 @@ Install `prefect-email` with `pip`:
 ```bash
 pip install prefect-email
 ```
+
+Then, register to [view the block](https://orion-docs.prefect.io/ui/blocks/) on Prefect Cloud:
+
+```bash
+prefect block register -m prefect_email
+```
+
+Note, to use the `load` method on Blocks, you must already have a block document [saved through code](https://orion-docs.prefect.io/concepts/blocks/#saving-blocks) or [saved through the UI](https://orion-docs.prefect.io/ui/blocks/).
 
 ### Send an email using Gmail
 
@@ -52,6 +75,8 @@ Please note, many email services, like Gmail, require an [App Password](https://
 If you encounter any bugs while using `prefect-email`, feel free to open an issue in the [prefect-email](https://github.com/PrefectHQ/prefect-email) repository.
 
 If you have any questions or issues while using `prefect-email`, you can find help in either the [Prefect Discourse forum](https://discourse.prefect.io/) or the [Prefect Slack community](https://prefect.io/slack).
+
+Feel free to ⭐️ or watch [`prefect-email`](https://github.com/PrefectHQ/prefect-email) for updates too!
 
 ## Development
 
