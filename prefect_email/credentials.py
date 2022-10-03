@@ -3,6 +3,7 @@
 import ssl
 from enum import Enum
 from smtplib import SMTP, SMTP_SSL
+from ssl import SSLContext
 from typing import Optional, Union
 
 from prefect.blocks.core import Block
@@ -95,6 +96,7 @@ class EmailServerCredentials(Block):
     smtp_server: Optional[Union[str, SMTPServer]] = SMTPServer.GMAIL
     smtp_type: Optional[Union[str, SMTPType]] = SMTPType.SSL
     smtp_port: Optional[int] = None
+    context: Optional[SSLContext] = None
 
     def get_server(self) -> SMTP:
         """
@@ -133,7 +135,9 @@ class EmailServerCredentials(Block):
         if smtp_type == SMTPType.INSECURE:
             server = SMTP(smtp_server, smtp_port)
         else:
-            context = ssl.create_default_context()
+            context = self.context
+            if context is None:
+                context = ssl.create_default_context()
             if smtp_type == SMTPType.SSL:
                 server = SMTP_SSL(smtp_server, smtp_port, context=context)
             elif smtp_type == SMTPType.STARTTLS:
