@@ -15,7 +15,7 @@ class SMTPType(Enum):
     """
 
     SSL = 465
-    STARTTLS = 465
+    STARTTLS = 587
     INSECURE = 25
 
 
