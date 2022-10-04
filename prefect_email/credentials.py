@@ -3,7 +3,7 @@
 import ssl
 from enum import Enum
 from smtplib import SMTP, SMTP_SSL
-from typing import Any, Optional, Union
+from typing import Optional, Union
 
 from prefect.blocks.core import Block
 from pydantic import SecretStr
@@ -78,6 +78,7 @@ class EmailServerCredentials(Block):
             keys from the built-in SMTPServer Enum members, like "gmail".
         smtp_type: Either "SSL", "STARTTLS", or "INSECURE".
         smtp_port: If provided, overrides the smtp_type's default port number.
+        context: If provided, overrides the default ssl.SSLContext
 
     Example:
         Load stored email server credentials:
@@ -95,7 +96,7 @@ class EmailServerCredentials(Block):
     smtp_server: Optional[Union[str, SMTPServer]] = SMTPServer.GMAIL
     smtp_type: Optional[Union[str, SMTPType]] = SMTPType.SSL
     smtp_port: Optional[int] = None
-    context: Optional[Any] = None
+    context: Optional[object] = None
 
     def get_server(self) -> SMTP:
         """
