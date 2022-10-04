@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Add custom SSLContext parameter to EmailServerCredentials - [#38](https://github.com/PrefectHQ/prefect-email/pull/38)
+
 ### Added
 
 ### Changed
