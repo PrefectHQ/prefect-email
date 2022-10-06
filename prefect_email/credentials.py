@@ -73,7 +73,9 @@ class EmailServerCredentials(Block):
 
     Attributes:
         username: The username to use for authentication to the server.
+            Unnecessary if SMTP login is not required
         password: The password to use for authentication to the server.
+            Unnecessary if SMTP login is not required
         smtp_server: Either the hostname of the SMTP server, or one of the
             keys from the built-in SMTPServer Enum members, like "gmail".
         smtp_type: Either "SSL", "STARTTLS", or "INSECURE".
@@ -90,8 +92,8 @@ class EmailServerCredentials(Block):
     _block_type_name = "Email Server Credentials"
     _logo_url = "https://images.ctfassets.net/gm98wzqotmnx/3PcxFuO9XUqs7wU9MiUBMg/ca740e27815d15528373aced667f58b9/email__1_.png?h=250"  # noqa
 
-    username: str
-    password: SecretStr
+    username: Optional[str] = None
+    password: Optional[SecretStr] = ""
     smtp_server: Optional[Union[str, SMTPServer]] = SMTPServer.GMAIL
     smtp_type: Optional[Union[str, SMTPType]] = SMTPType.SSL
     smtp_port: Optional[int] = None
@@ -139,6 +141,7 @@ class EmailServerCredentials(Block):
             elif smtp_type == SMTPType.STARTTLS:
                 server = SMTP(smtp_server, smtp_port)
                 server.starttls(context=context)
-            server.login(self.username, self.password.get_secret_value())
+            if self.username is not None:
+                server.login(self.username, self.password.get_secret_value())
 
         return server
