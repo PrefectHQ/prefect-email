@@ -3,7 +3,7 @@
 import ssl
 from enum import Enum
 from smtplib import SMTP, SMTP_SSL
-from typing import Optional, Union
+from typing import Union
 
 from prefect.blocks.core import Block
 from pydantic import SecretStr
@@ -73,9 +73,9 @@ class EmailServerCredentials(Block):
 
     Attributes:
         username: The username to use for authentication to the server.
-            Unnecessary if SMTP login is not required
+            Unnecessary if SMTP login is not required.
         password: The password to use for authentication to the server.
-            Unnecessary if SMTP login is not required
+            Unnecessary if SMTP login is not required.
         smtp_server: Either the hostname of the SMTP server, or one of the
             keys from the built-in SMTPServer Enum members, like "gmail".
         smtp_type: Either "SSL", "STARTTLS", or "INSECURE".
@@ -92,11 +92,11 @@ class EmailServerCredentials(Block):
     _block_type_name = "Email Server Credentials"
     _logo_url = "https://images.ctfassets.net/gm98wzqotmnx/3PcxFuO9XUqs7wU9MiUBMg/ca740e27815d15528373aced667f58b9/email__1_.png?h=250"  # noqa
 
-    username: Optional[str] = None
-    password: Optional[SecretStr] = ""
-    smtp_server: Optional[Union[str, SMTPServer]] = SMTPServer.GMAIL
-    smtp_type: Optional[Union[str, SMTPType]] = SMTPType.SSL
-    smtp_port: Optional[int] = None
+    username: str = None
+    password: SecretStr = SecretStr("")
+    smtp_server: Union[str, SMTPServer] = SMTPServer.GMAIL
+    smtp_type: Union[str, SMTPType] = SMTPType.SSL
+    smtp_port: int = None
 
     def get_server(self) -> SMTP:
         """
