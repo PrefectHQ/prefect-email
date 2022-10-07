@@ -31,6 +31,9 @@ class SMTPMock:
         self.username = username
         self.password = password
 
+    def starttls(self, context=None):
+        self.context = context
+
 
 @pytest.fixture
 def smtp(monkeypatch):
