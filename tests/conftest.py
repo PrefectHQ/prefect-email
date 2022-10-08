@@ -21,8 +21,9 @@ def email_server_credentials():
     return email_server_credentials
 
 
-class SMTPMock:
+class SMTPMock(MagicMock):
     def __init__(self, server, port, context=None):
+        super().__init__()
         self.server = server
         self.port = port
         self.context = context
