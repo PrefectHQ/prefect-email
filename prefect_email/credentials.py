@@ -3,6 +3,7 @@
 import ssl
 from enum import Enum
 from smtplib import SMTP, SMTP_SSL
+from ssl import _SSLMethod
 from typing import Optional, Union
 
 from prefect.blocks.core import Block
@@ -80,6 +81,7 @@ class EmailServerCredentials(Block):
             keys from the built-in SMTPServer Enum members, like "gmail".
         smtp_type: Either "SSL", "STARTTLS", or "INSECURE".
         smtp_port: If provided, overrides the smtp_type's default port number.
+        ssl_protocol: The protocol to use to instantiate `SSLContext`.
 
     Example:
         Load stored email server credentials:
@@ -97,6 +99,7 @@ class EmailServerCredentials(Block):
     smtp_server: Union[str, SMTPServer] = SMTPServer.GMAIL
     smtp_type: Union[str, SMTPType] = SMTPType.SSL
     smtp_port: Optional[int] = None
+    ssl_protocol: Optional[_SSLMethod] = None
 
     def get_server(self) -> SMTP:
         """
@@ -135,7 +138,10 @@ class EmailServerCredentials(Block):
         if smtp_type == SMTPType.INSECURE:
             server = SMTP(smtp_server, smtp_port)
         else:
-            context = ssl.create_default_context()
+            if self.ssl_protocol is not None:
+                context = ssl.SSLContext(self.ssl_protocol.value)
+            else:
+                context = ssl.create_default_context()
             if smtp_type == SMTPType.SSL:
                 server = SMTP_SSL(smtp_server, smtp_port, context=context)
             elif smtp_type == SMTPType.STARTTLS:
