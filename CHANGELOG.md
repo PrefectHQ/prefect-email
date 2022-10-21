@@ -7,8 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-- Fix STARTTLS to use port 587 [#41](https://github.com/PrefectHQ/prefect-email/pull/41)
-
 ### Added
 
 ### Changed
@@ -20,6 +18,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Security
+
+## 0.2.1
+
+Released on October 21st, 2022.
+
+### Fixed
+
+- Fix STARTTLS to use port 587 [#41](https://github.com/PrefectHQ/prefect-email/pull/41)
 
 ## 0.2.0
 
