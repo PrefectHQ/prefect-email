@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fix saving and loading a `SMTPType` enum [#56](https://github.com/PrefectHQ/prefect-email/pull/56)
+
 ### Security
 
 ## 0.2.1
