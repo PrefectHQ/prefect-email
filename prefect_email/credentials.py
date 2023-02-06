@@ -49,8 +49,8 @@ def _cast_to_enum(obj: Union[str, SMTPType], enum: Enum, restrict: bool = False)
     if isinstance(obj, enum):
         # if already an enum member, continue
         return obj
-
     valid_enums = list(enum.__members__)
+
     # capitalize and try to match an enum member
     if obj.upper() not in valid_enums:
         if restrict:
@@ -94,8 +94,8 @@ class EmailServerCredentials(Block):
 
     username: Optional[str] = None
     password: SecretStr = SecretStr("")
-    smtp_server: Union[str, SMTPServer] = SMTPServer.GMAIL
-    smtp_type: Union[str, SMTPType] = SMTPType.SSL
+    smtp_server: Union[SMTPServer, str] = SMTPServer.GMAIL
+    smtp_type: Union[SMTPType, str] = SMTPType.SSL
     smtp_port: Optional[int] = None
 
     def get_server(self) -> SMTP:
