@@ -6,7 +6,7 @@ from smtplib import SMTP, SMTP_SSL
 from typing import Optional, Union
 
 from prefect.blocks.core import Block
-from pydantic import SecretStr
+from pydantic import SecretStr, validator
 
 
 class SMTPType(Enum):
@@ -98,6 +98,22 @@ class EmailServerCredentials(Block):
     smtp_type: Union[SMTPType, str] = SMTPType.SSL
     smtp_port: Optional[int] = None
 
+    @validator("smtp_server", pre=True)
+    def _cast_smtp_server(cls, value):
+        """
+        Cast the smtp_server to an SMTPServer Enum member, if valid.
+        """
+        return _cast_to_enum(value, SMTPServer)
+
+    @validator("smtp_type", pre=True)
+    def _cast_smtp_type(cls, value):
+        """
+        Cast the smtp_type to an SMTPType Enum member, if valid.
+        """
+        if isinstance(value, int):
+            return SMTPType(value)
+        return _cast_to_enum(value, SMTPType, restrict=True)
+
     def get_server(self) -> SMTP:
         """
         Gets an authenticated SMTP server.
@@ -123,11 +139,11 @@ class EmailServerCredentials(Block):
             example_get_server_flow()
             ```
         """
-        smtp_server = _cast_to_enum(self.smtp_server, SMTPServer)
+        smtp_server = self.smtp_server
         if isinstance(smtp_server, SMTPServer):
             smtp_server = smtp_server.value
 
-        smtp_type = _cast_to_enum(self.smtp_type, SMTPType, restrict=True)
+        smtp_type = self.smtp_type
         smtp_port = self.smtp_port
         if smtp_port is None:
             smtp_port = smtp_type.value

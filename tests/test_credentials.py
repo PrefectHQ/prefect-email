@@ -79,7 +79,7 @@ def test_email_server_credentials_defaults(smtp):
     assert server.port == 465
 
 
-@pytest.mark.parametrize("smtp_type", [SMTPType.STARTTLS, "STARTTLS"])
+@pytest.mark.parametrize("smtp_type", [SMTPType.STARTTLS, "STARTTLS", 587])
 def test_email_service_credentials_roundtrip_smtp_type_enum(smtp, smtp_type):
     email_server_credentials = EmailServerCredentials(
         smtp_server="us-smtp-outbound-1.mimecast.com",
@@ -89,6 +89,6 @@ def test_email_service_credentials_roundtrip_smtp_type_enum(smtp, smtp_type):
     )
     email_server_credentials.save("email-credentials", overwrite=True)
     credentials = EmailServerCredentials.load("email-credentials")
-    assert credentials.smtp_type.value == SMTPType.STARTTLS.value
+    assert credentials.smtp_type == SMTPType.STARTTLS
     server = credentials.get_server()
     assert server.port == 587
