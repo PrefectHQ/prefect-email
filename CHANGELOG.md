@@ -19,6 +19,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## 0.2.2
+
+Released on February 6th, 2023.
+
+### Fixed
+
+- Fix saving and loading a `SMTPType` enum [#56](https://github.com/PrefectHQ/prefect-email/pull/56)
+
 ## 0.2.1
 
 Released on October 21st, 2022.
