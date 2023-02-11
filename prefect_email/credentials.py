@@ -6,7 +6,7 @@ from smtplib import SMTP, SMTP_SSL
 from typing import Optional, Union
 
 from prefect.blocks.core import Block
-from pydantic import SecretStr, validator
+from pydantic import Field, SecretStr, validator
 
 
 class SMTPType(Enum):
@@ -91,12 +91,40 @@ class EmailServerCredentials(Block):
 
     _block_type_name = "Email Server Credentials"
     _logo_url = "https://images.ctfassets.net/gm98wzqotmnx/3PcxFuO9XUqs7wU9MiUBMg/ca740e27815d15528373aced667f58b9/email__1_.png?h=250"  # noqa
+    _documentation_url = "https://prefecthq.github.io/prefect-email/credentials/#prefect_email.credentials.EmailServerCredentials"  # noqa
 
-    username: Optional[str] = None
-    password: SecretStr = SecretStr("")
-    smtp_server: Union[SMTPServer, str] = SMTPServer.GMAIL
-    smtp_type: Union[SMTPType, str] = SMTPType.SSL
-    smtp_port: Optional[int] = None
+    username: Optional[str] = Field(
+        default=None,
+        description=(
+            "The username to use for authentication to the server. "
+            "Unnecessary if SMTP login is not required."
+        ),
+    )
+    password: SecretStr = Field(
+        default=SecretStr(""),
+        description=(
+            "The password to use for authentication to the server. "
+            "Unnecessary if SMTP login is not required."
+        ),
+    )
+    smtp_server: Union[SMTPServer, str] = Field(
+        default=SMTPServer.GMAIL,
+        description=(
+            "Either the hostname of the SMTP server, or one of the "
+            "keys from the built-in SMTPServer Enum members, like 'gmail'."
+        ),
+        title="SMTP Server",
+    )
+    smtp_type: Union[SMTPType, str] = Field(
+        default=SMTPType.SSL,
+        description=("Either 'SSL', 'STARTTLS', or 'INSECURE'."),
+        title="SMTP Type",
+    )
+    smtp_port: Optional[int] = Field(
+        default=None,
+        description=("If provided, overrides the smtp_type's default port number."),
+        title="SMTP Port",
+    )
 
     @validator("smtp_server", pre=True)
     def _cast_smtp_server(cls, value):
