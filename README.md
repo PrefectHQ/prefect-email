@@ -1,8 +1,8 @@
 # prefect-email
 
 <p align="center">
-    <!--- Insert a cover image here -->
-    <!--- <br> -->
+    <img src="https://user-images.githubusercontent.com/15331990/218230330-face3c8d-7f09-47f5-a24a-708c6d707b1a.png">
+    <br>
     <a href="https://pypi.python.org/pypi/prefect-email/" alt="PyPI version">
         <img alt="PyPI" src="https://img.shields.io/pypi/v/prefect-email?color=0052FF&labelColor=090422"></a>
     <a href="https://github.com/PrefectHQ/prefect-email/" alt="Stars">
