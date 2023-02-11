@@ -26,31 +26,77 @@ Visit the full docs [here](https://PrefectHQ.github.io/prefect-email) to see add
 
 ### Integrate with Prefect flows
 
-Simplify your email communications and ensure task completion with the `prefect-email` library.
+`prefect-email` makes sending emails effortless, giving you peace of mind that your emails are being sent as expected.
 
-This powerful tool makes sending emails effortless, giving you peace of mind that your tasks are being completed as expected.
+First, install [prefect-email](#installation) and [save to block](#saving-credentials-to-block) to run the examples below!
 
 ```python
 from prefect import flow
 from prefect_email import EmailServerCredentials, email_send_message
 
 @flow
-def example_email_send_message_flow():
+def example_email_send_message_flow(email_addresses: List[str]):
     email_server_credentials = EmailServerCredentials.load("BLOCK-NAME-PLACEHOLDER")
-    subject = email_send_message(
-        email_server_credentials=email_server_credentials,
-        subject="Example Flow Notification using Gmail",
-        msg="This proves email_send_message works!",
-        email_to="someone_awesome@gmail.com",
-    )
-    return subject
+    for email_address in email_addresses:
+        subject = email_send_message.with_options(name=f"email {email_address}").submit(
+            email_server_credentials=email_server_credentials,
+            subject="Example Flow Notification using Gmail",
+            msg="This proves email_send_message works!",
+            email_to=email_address,
+        )
 
-example_email_send_message_flow()
+example_email_send_message_flow(["EMAIL-ADDRESS-PLACEHOLDER"])
+```
+
+Outputs:
+
+```bash
+16:58:27.646 | INFO    | prefect.engine - Created flow run 'busy-bat' for flow 'example-email-send-message-flow'
+16:58:29.225 | INFO    | Flow run 'busy-bat' - Created task run 'email someone@gmail.com-0' for task 'email someone@gmail.com'
+16:58:29.229 | INFO    | Flow run 'busy-bat' - Submitted task run 'email someone@gmail.com-0' for execution.
+16:58:31.523 | INFO    | Task run 'email someone@gmail.com-0' - Finished in state Completed()
+16:58:31.713 | INFO    | Flow run 'busy-bat' - Finished in state Completed('All states completed.')
 ```
 
 Please note, many email services, like Gmail, require an [App Password](https://support.google.com/accounts/answer/185833) to successfully send emails. If you encounter an error similar to `smtplib.SMTPAuthenticationError: (535, b'5.7.8 Username and Password not accepted...`, it's likely you are not using an App Password.
 
+### Capture exceptions and notify by email
+
+Perhaps you want an email notification with the details of the exception when your flow run fails.
+
+`prefect-email` can be wrapped in an `except` statement to do just that!
+
+```python
+from prefect import flow
+from prefect.context import get_run_context
+from prefect_email import EmailServerCredentials, email_send_message
+
+@flow
+def notify_exc_by_email(exc):
+    context = get_run_context()
+    flow_run_name = context.flow_run.name
+    email_server_credentials = EmailServerCredentials.load("email-server-credentials")
+    email_send_message(
+        email_server_credentials=email_server_credentials,
+        subject=f"Flow run {flow_run_name!r} failed",
+        msg=f"Flow run {flow_run_name!r} failed due to {exc}.",
+        email_to=email_server_credentials.username,
+    )
+
+@flow
+def example_flow():
+    try:
+        1 / 0
+    except Exception as exc:
+        notify_exc_by_email(exc)
+        raise
+
+example_flow()
+```
+
 ## Resources
+
+For more tips on how to use tasks and flows in a Collection, check out [Using Collections](https://orion-docs.prefect.io/collections/usage/)!
 
 ### Installation
 
@@ -80,9 +126,7 @@ Note, to use the `load` method on Blocks, you must already have a block document
 
 Below is a walkthrough on saving block documents through code.
 
-3. Click "+ Create new secret key".
-4. Copy the generated API key.
-5. Create a short script, replacing the placeholders (or do so in the UI).
+Create a short script, replacing the placeholders.
 
 ```python
 from prefect_email import EmailServerCredentials

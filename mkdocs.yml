@@ -75,8 +75,8 @@ nav:
     - Blocks Catalog: blocks_catalog.md
     - Examples Catalog: examples_catalog.md
     - API Reference:
-        - Tasks: tasks.md
-        - Flows: flows.md
+        - Credentials: credentials.md
+        - Message: message.md
 
 extra:
     social:
