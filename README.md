@@ -71,7 +71,6 @@ from prefect import flow
 from prefect.context import get_run_context
 from prefect_email import EmailServerCredentials, email_send_message
 
-@flow
 def notify_exc_by_email(exc):
     context = get_run_context()
     flow_run_name = context.flow_run.name
