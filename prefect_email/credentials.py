@@ -2,6 +2,7 @@
 
 import ssl
 from enum import Enum
+from functools import partial
 from smtplib import SMTP, SMTP_SSL
 from typing import Optional, Union
 
@@ -101,7 +102,7 @@ class EmailServerCredentials(Block):
         ),
     )
     password: SecretStr = Field(
-        default=SecretStr(""),
+        default_factory=partial(SecretStr, ""),
         description=(
             "The password to use for authentication to the server. "
             "Unnecessary if SMTP login is not required."
