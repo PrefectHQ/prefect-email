@@ -28,7 +28,7 @@ Visit the full docs [here](https://PrefectHQ.github.io/prefect-email) to see add
 
 `prefect-email` makes sending emails effortless, giving you peace of mind that your emails are being sent as expected.
 
-First, install [prefect-email](#installation) and [save to block](#saving-credentials-to-block) to run the examples below!
+First, install [prefect-email](#installation) and [save your email credentials to a block](#saving-credentials-to-block) to run the examples below!
 
 ```python
 from prefect import flow
@@ -118,7 +118,7 @@ Requires an installation of Python 3.7+.
 
 We recommend using a Python virtual environment manager such as pipenv, conda or virtualenv.
 
-These tasks are designed to work with Prefect 2.0. For more information about how to use Prefect, please refer to the [Prefect documentation](https://orion-docs.prefect.io/).
+These tasks are designed to work with Prefect 2. For more information about how to use Prefect, please refer to the [Prefect documentation](https://orion-docs.prefect.io/).
 
 ### Saving credentials to block
 
