@@ -86,6 +86,7 @@ class EmailServerCredentials(Block):
             keys from the built-in SMTPServer Enum members, like "gmail".
         smtp_type: Either "SSL", "STARTTLS", or "INSECURE".
         smtp_port: If provided, overrides the smtp_type's default port number.
+        unverified_context: Unverified context should be used or not. By default this is False.
 
     Example:
         Load stored email server credentials:
