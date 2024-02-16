@@ -191,7 +191,7 @@ class EmailServerCredentials(Block):
             elif smtp_type == SMTPType.STARTTLS:
                 server = SMTP(smtp_server, smtp_port)
                 server.starttls(context=context)
-            if self.username is not None:
-                server.login(self.username, self.password.get_secret_value())
+        if self.username is not None:
+            server.login(self.username, self.password.get_secret_value())
 
         return server
